@@ -1,0 +1,91 @@
+{
+  "brand": "FlightRights Desk",
+  "networks": [
+    {
+      "name": "flightrights_desk",
+      "front_man": "passenger_advocate",
+      "hocon": "./flightrights_desk.network.json",
+      "description": "Calculate EU261, UK261, Turkish SHY-PASSENGER, and US DOT flight compensation, manage Art. 9 care expenses, file confirmed statutory claim dossiers, and verify airport disruptions with Disruption Ledger.",
+      "tags": [
+        "agentified-website",
+        "passenger-rights",
+        "eu261",
+        "aviation",
+        "multi-origin"
+      ],
+      "sample_queries": [
+        "My Lufthansa flight FRA to ZRH was delayed 4.2 hours due to a technical fault. How much EU261 compensation am I owed?",
+        "Compare EU261, UK261, and Turkish SHY-PASSENGER for a cancelled Turkish Airlines flight from IST to LHR with 2 days notice.",
+        "Add a 48 EUR airport dinner receipt and a 190 EUR hotel receipt to my Art. 9 care ledger.",
+        "Ask Disruption Ledger whether FRA had an ATC or weather disruption on 2026-11-24 and which enforcement body covers Germany.",
+        "Ask Disruption Ledger to issue a SHA-256 evidence seal for flight LH1186 from FRA to ZRH on 2026-11-24.",
+        "Can you file a court lawsuit or rebook my airline ticket directly?"
+      ]
+    }
+  ],
+  "llm_router": {
+    "base_url": "https://flightrights-desk.bedir-ai.workers.dev/v1",
+    "publisher_funded": true,
+    "mock": false,
+    "byok_router": "https://api.otari.ai/api/v1"
+  },
+  "allowed_peers": [
+    "https://disruption-ledger.bedir-ai.workers.dev"
+  ],
+  "peer_policy": {
+    "mode": "closed",
+    "deny_origins": [],
+    "note": "Calls only the partner site listed in allowed_peers (Disruption Ledger) after the visitor approves the consent card."
+  },
+  "agent_mcp": {
+    "protocol": "nsdeploy-agent-mcp/v1",
+    "network": "flightrights_desk",
+    "front_man": "passenger_advocate",
+    "available": true,
+    "endpoint": "https://flightrights-desk.bedir-ai.workers.dev/mcp",
+    "reason": "Public read-only JSON-RPC 2.0 MCP facade available at /mcp."
+  },
+  "theme": {
+    "primary": "#0f294a"
+  },
+  "linking": {
+    "protocol": "nsdeploy-link/v1",
+    "exports": [
+      {
+        "network": "flightrights_desk",
+        "front_man": "passenger_advocate",
+        "aliases": [
+          "flightrights_desk",
+          "passenger_advocate"
+        ],
+        "url": "flightrights_desk"
+      }
+    ],
+    "imports": [],
+    "link_updates": {
+      "mode": "browser-local"
+    }
+  },
+  "deployment": {
+    "mode": "static",
+    "self_contained_runtime": true,
+    "browser_mock": false,
+    "direct_byok": true,
+    "direct_mcp_requires_cors": true,
+    "public_mcp_facade": true
+  },
+  "actions": {
+    "version": 1,
+    "module": "./site-actions.js",
+    "bridge": "./bridge/action-bridge.html",
+    "agentTools": [
+      "get_desk_state",
+      "calculate_route_entitlement",
+      "get_statute_guide",
+      "evaluate_flight_claim",
+      "add_care_expense",
+      "remove_care_expense",
+      "file_statutory_claim"
+    ]
+  }
+}

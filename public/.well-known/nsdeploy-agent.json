@@ -1,0 +1,8 @@
+{
+  "protocol": "nsdeploy-agent-mcp/v1",
+  "network": "flightrights_desk",
+  "front_man": "passenger_advocate",
+  "available": true,
+  "endpoint": "https://flightrights-desk.bedir-ai.workers.dev/mcp",
+  "reason": "Public read-only JSON-RPC 2.0 MCP facade available at /mcp."
+}

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlightRights Desk — Open Agentic Air Passenger Rights Workbench</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="./site.js"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-inner">
+      <div>
+        <div class="badge-row">
+          <span class="hero-badge">OPEN AGENTIC WEB · MVP PROFILE 0.3</span>
+          <span class="hero-badge hero-badge-live">EU261 · UK261 · SHY-YOLCU · US DOT · MONTREAL</span>
+        </div>
+        <h1>FlightRights Desk</h1>
+        <p class="hero-sub">Deterministic air passenger compensation calculator, great-circle corridor engine, multi-jurisdiction statutory comparison, and privacy-preserving cross-origin disruption verification running natively in your browser.</p>
+      </div>
+      <nav class="hero-nav" aria-label="Page sections">
+        <a href="#calculator">Calculator</a>
+        <a href="#care-dossier">Care &amp; Claim</a>
+        <a href="#assistant">AI Assistant</a>
+        <a id="partner-ledger-link" href="https://disruption-ledger.bedir-ai.workers.dev/" target="_blank" rel="noopener">Disruption Ledger Peer ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main-stack">
+    <section id="scenarios" class="card scenario-bar" aria-labelledby="scenarios-heading">
+      <div class="section-head">
+        <h2 id="scenarios-heading">Quick Real-World Corridors</h2>
+        <span class="muted">Zero fabricated data · Haversine great-circle distance &amp; statutory text rules</span>
+      </div>
+      <div id="preset-buttons" class="preset-row"></div>
+    </section>
+
+    <section id="calculator" class="card" aria-labelledby="calc-heading">
+      <div class="section-head">
+        <div>
+          <h2 id="calc-heading">1. Route &amp; Disruption Entitlement Calculator</h2>
+          <p class="muted">Evaluates EU Regulation 261/2004 (and Swiss bilateral), UK261, Turkish SHY-PASSENGER, US DOT 14 CFR Parts 250/259, and Montreal Convention Art. 22 baggage limits simultaneously.</p>
+        </div>
+        <span id="dossier-version-pill" class="pill">Dossier v1</span>
+      </div>
+
+      <div class="calc-layout">
+        <form id="flight-form" class="form-grid" novalidate>
+          <label>
+            Origin Airport (IATA)
+            <select id="origin-input" name="origin"></select>
+          </label>
+          <label>
+            Destination Airport (IATA)
+            <select id="destination-input" name="destination"></select>
+          </label>
+          <label>
+            Operating Carrier
+            <select id="carrier-input" name="carrier"></select>
+          </label>
+          <label>
+            Disruption Type
+            <select id="type-input" name="disruptionType">
+              <option value="delay">Arrival Delay</option>
+              <option value="cancellation">Flight Cancellation</option>
+              <option value="denied_boarding">Involuntary Denied Boarding</option>
+            </select>
+          </label>
+          <label>
+            Cause Reported by Airline
+            <select id="cause-input" name="cause"></select>
+          </label>
+          <label>
+            Arrival Delay (Hours)
+            <input id="delay-input" name="delayHours" type="number" min="0" max="72" step="0.1" value="4.2">
+          </label>
+          <label>
+            Cancellation Notice (Days)
+            <input id="notice-input" name="noticeDays" type="number" min="0" max="365" step="1" value="0">
+          </label>
+          <label>
+            Reroute Arrival Delta (Hours, 0 = none)
+            <input id="reroute-input" name="rerouteDelayHours" type="number" min="0" max="72" step="0.1" value="0">
+          </label>
+          <label>
+            Passengers
+            <input id="pax-input" name="passengers" type="number" min="1" max="9" step="1" value="1">
+          </label>
+          <label>
+            One-Way Ticket Fare (USD)
+            <input id="fare-input" name="ticketFareUsd" type="number" min="0" max="25000" step="10" value="380">
+          </label>
+          <div class="form-submit-cell">
+            <button type="submit" id="evaluate-btn" class="btn-primary">Calculate Statutory Rights</button>
+          </div>
+        </form>
+
+        <div class="map-panel">
+          <div class="map-header">
+            <strong id="route-title">FRA → ZRH</strong>
+            <span id="distance-pill" class="distance-pill">285 km · 177 mi</span>
+          </div>
+          <svg id="route-svg" viewBox="0 0 560 220" role="img" aria-label="Great-circle flight corridor visualization"></svg>
+          <div id="precedent-box" class="precedent-box"></div>
+        </div>
+      </div>
+
+      <p id="calc-error" class="field-error" hidden></p>
+
+      <div id="dual-regime-banner" class="dual-banner" hidden></div>
+      <div id="regimes-grid" class="regimes-grid"></div>
+    </section>
+
+    <section id="care-dossier" class="two-col">
+      <div class="card" aria-labelledby="care-heading">
+        <div class="section-head">
+          <div>
+            <h2 id="care-heading">2. Art. 9 Care Expenses Ledger</h2>
+            <p class="muted">Even when extraordinary circumstances exempt fixed cash payouts, airlines remain strictly liable for reasonable meals, hotel, airport transfers, and communications.</p>
+          </div>
+          <strong id="care-total-badge" class="money-badge">EUR 0</strong>
+        </div>
+
+        <form id="care-form" class="care-form" novalidate>
+          <label>
+            Category
+            <select id="care-category" name="category">
+              <option value="meals">Meals &amp; Refreshments</option>
+              <option value="hotel">Overnight Hotel</option>
+              <option value="transfer">Airport Transfer</option>
+              <option value="communications">Phone / Data Calls</option>
+            </select>
+          </label>
+          <label>
+            Amount (EUR)
+            <input id="care-amount" name="amountEur" type="number" min="1" max="2000" step="1" value="32">
+          </label>
+          <label>
+            Receipt Note
+            <input id="care-note" name="note" type="text" maxlength="100" placeholder="e.g. Airport dinner receipt">
+          </label>
+          <button type="submit" id="add-care-btn" class="btn-secondary">Add Receipt</button>
+        </form>
+        <p id="care-error" class="field-error" hidden></p>
+        <div id="care-list" class="care-list"></div>
+      </div>
+
+      <div class="card" aria-labelledby="claim-heading">
+        <div class="section-head">
+          <div>
+            <h2 id="claim-heading">3. File Formal Statutory Claim Dossier</h2>
+            <p class="muted">Generates a verifiable SHA-256 claim dossier &amp; formal statutory demand letter. The AI assistant always opens a confirmation dialog before running this irreversible step.</p>
+          </div>
+        </div>
+
+        <form id="claim-form" class="claim-form" novalidate>
+          <label>
+            Passenger Full Name
+            <input id="claim-name" name="passengerName" type="text" maxlength="80" placeholder="Ada Lovelace" required>
+          </label>
+          <label>
+            Passenger Email
+            <input id="claim-email" name="email" type="email" maxlength="120" placeholder="ada@example.com" required>
+          </label>
+          <label>
+            Flight Number
+            <input id="claim-flight" name="flightNumber" type="text" maxlength="8" value="LH1186" required>
+          </label>
+          <label>
+            Flight Date
+            <input id="claim-date" name="flightDate" type="date" value="2026-11-24" required>
+          </label>
+          <label>
+            Booking Reference (PNR)
+            <input id="claim-pnr" name="bookingRef" type="text" maxlength="8" placeholder="X7K9P2" required>
+          </label>
+          <div class="form-submit-cell">
+            <button type="submit" id="file-claim-btn" class="btn-primary">Generate Statutory Claim Dossier</button>
+          </div>
+        </form>
+        <p id="claim-error" class="field-error" hidden></p>
+        <div id="filed-claims" class="filed-claims"></div>
+      </div>
+    </section>
+
+    <section id="assistant" class="assistant card" aria-labelledby="assistant-heading">
+      <div class="section-head">
+        <div>
+          <h2 id="assistant-heading">Ask FlightRights Desk (Multi-Agent Browser Runtime)</h2>
+          <p class="muted">Two-agent Neuro SAN network (<code>passenger_advocate</code> + <code>statute_specialist</code>) running directly in your browser. Can ask independent peer <strong>Disruption Ledger</strong> (second origin) to verify ATC/weather logs, compare reroutes, look up enforcement bodies, or anchor a zero-PII SHA-256 evidence seal after your consent.</p>
+        </div>
+        <span class="pill">Zero-Key Free AI + BYOK Otari</span>
+      </div>
+      <p class="assistant-note">Your messages and this page's data go to this site's free publisher-funded AI router by default, or to the LLM provider you pick in AI model settings below. You confirm anything that cannot be undone before it happens, and approve every cross-origin partner call on a consent card first.</p>
+      <p id="assistant-status" role="status">Connecting the assistant… If this message stays, the assistant could not load. You can still use the page directly.</p>
+      <div id="agent-app">
+        <div data-ns-slot="header"></div>
+        <div class="assistant-panels">
+          <div data-ns-slot="chat"></div>
+          <div data-ns-slot="agents"></div>
+        </div>
+        <div data-ns-slot="settings"></div>
+      </div>
+    </section>
+
+    <section id="statute-guide" class="card" aria-labelledby="guide-heading">
+      <h2 id="guide-heading">Statutory Reference &amp; Site Boundaries</h2>
+      <div class="guide-grid">
+        <article class="guide-box" id="guide-eu261">
+          <h3>EU261 &amp; Swiss Agreement</h3>
+          <p>Covers all departures from EU/EEA/CH airports plus arrivals into EU/EEA/CH on EU/EEA/CH carriers. Fixed bands: EUR 250 (&lt;=1,500 km), EUR 400 (1,500-3,500 km or intra-EU &gt;1,500 km), EUR 600 (&gt;3,500 km). Arrival delay &gt;=3h triggers cash payout (Sturgeon C-402/07).</p>
+        </article>
+        <article class="guide-box" id="guide-uk-tr">
+          <h3>UK261 &amp; Turkish SHY-PASSENGER</h3>
+          <p>UK261 pays GBP 220 / GBP 350 / GBP 520 on UK departures or UK/EU carriers into the UK. Turkish SHY-PASSENGER pays EUR 100 domestic and EUR 250 / 400 / 600 international (in TRY at CBRT selling rate) on Turkish departures or Turkish carriers into Turkey.</p>
+        </article>
+        <article class="guide-box" id="guide-us-montreal">
+          <h3>US DOT &amp; Montreal Convention</h3>
+          <p>US DOT 14 CFR Part 259 mandates automatic prompt cash refunds for cancellations or significant delays (&gt;=3h domestic, &gt;=6h international) when rebooking is declined. Part 250 pays 200%/400% up to USD 775 / USD 1,550 for involuntary bumping. Montreal Convention Art. 22 caps checked baggage liability at 1,519 SDR.</p>
+        </article>
+        <article class="guide-box" id="guide-limits">
+          <h3>What This Site Does Not Do</h3>
+          <p id="fact-cannot-do">FlightRights Desk does not act as a law firm or file court lawsuits, does not rebook or sell flights, does not process airline credit-card refunds, and does not access live private airline PNR databases. For independent airport ATC/weather verification, reroute deltas, NEB portals, and SHA-256 evidence seals, consult our linked cross-origin peer <a id="fact-partner-link" href="https://disruption-ledger.bedir-ai.workers.dev/">Disruption Ledger</a>.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer container">
+    <p>FlightRights Desk · Open Agentic Web Challenge Submission (MVP Profile 0.3) · <a href="./agent-manifest.json">agent-manifest.json</a> · <a href="./flightrights_desk.network.json">flightrights_desk.network.json</a> · <a href="./.well-known/agent-card.json">A2A Card</a> · <a href="./mcp">Read-Only MCP</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "protocol": "nsdeploy-link/v1",
+  "exports": [
+    {
+      "network": "flightrights_desk",
+      "front_man": "passenger_advocate",
+      "aliases": [
+        "flightrights_desk",
+        "passenger_advocate"
+      ],
+      "url": "flightrights_desk"
+    }
+  ],
+  "imports": [],
+  "link_updates": {
+    "mode": "browser-local"
+  }
+}
